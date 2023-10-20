@@ -1,6 +1,6 @@
 import unittest
 
-from main import Node, sum_of_depths
+from sum_of_depths.main import Node, sum_of_depths
 
 
 class TestSumOfDepth(unittest.TestCase):

@@ -1,48 +1,53 @@
-def bad_characters(pattern):
+"""
+Functions which build a shift table and find pattern in string
+"""
+
+
+def shift_table_building(pattern):
     if not pattern:
         return "No data"
 
-    M = len(pattern)
-    map = [-1] * 256
+    patterns_length = len(pattern)
+    shift_dict = {}
 
-    for j in range(M):
-        map[ord(pattern[j])] = j
+    for j in range(patterns_length):
+        shift_dict[ord(pattern[j])] = j
 
-    return map
+    return shift_dict
 
 
-def boyer_moore(string, pattern, bad_char_map):
-    M = len(pattern)
-    N = len(string)
-    res = []
+def boyer_moore(string, pattern, shifts_dict):
+    patterns_length = len(pattern)
+    strings_length = len(string)
+    patterns_index = []
 
     if not pattern or not string:
         return "Put some letters"
 
     i = 0
-    while i <= N - M:
-        skip = 0
-        j = M - 1
+    while i <= strings_length - patterns_length:
+        shifts = 0
+        j = patterns_length - 1
 
         while j >= 0:
             if pattern[j] != string[i + j]:
-                skip = max(1, j - bad_char_map[ord(string[i + j])])
+                shifts = max(1, j - shifts_dict.get(ord(string[i + j]), -1))
                 break
             j -= 1
 
-        if skip == 0:
-            res.append(i)
-            skip = 1
+        if shifts == 0:
+            patterns_index.append(i)
+            shifts = 1
 
-        i += skip
+        i += shifts
 
-    return res
+    return patterns_index
 
 
-string = "Hello Victoria Secret"
-pattern = "Victoria"
+simple_string: str = "Hello Victoria Secret"
+needed_pattern: str = "Victoria"
 
-bad_char_map = bad_characters(pattern)
-result = boyer_moore(string, pattern, bad_char_map)
+shifts_table = shift_table_building(needed_pattern)
+result = boyer_moore(simple_string, needed_pattern, shifts_table)
 
 print(result)
